@@ -8,7 +8,9 @@
 <body>
 <div>
 
-    <button type="button" class="btn btn-primary">LOGIN WITH GOOGLE</button>
+    <g:link controller="login" action="index">
+        <button type="button" class="btn btn-primary">LOGIN WITH GOOGLE</button>
+    </g:link>
 </div>
 </body>
 </html>
