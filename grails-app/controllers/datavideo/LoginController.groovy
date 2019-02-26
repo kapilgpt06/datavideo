@@ -3,6 +3,10 @@ package datavideo
 class LoginController {
 
     LoginService loginService
+
+    def user(){
+
+    }
     def index() {
         String redirectUrl = "${createLink(controller:"login", action: "callBack", absolute: true)}"
         String oauthUrl=loginService.generateOauthURL(redirectUrl)

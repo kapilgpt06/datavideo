@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>D2V</title>
+    <meta name="layout" content="main">
     <asset:stylesheet src="application.css"/>
     <asset:javascript src="application.js"/>
 </head>

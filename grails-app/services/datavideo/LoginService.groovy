@@ -1,6 +1,7 @@
 package datavideo
 
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import grails.transaction.Transactional
 import org.grails.web.json.JSONObject
 
@@ -10,16 +11,14 @@ class LoginService {
     final String AUTH_URL = 'https://accounts.google.com/o/oauth2/auth'
     final String TOKEN_URL = 'https://accounts.google.com/o/oauth2/token'
     final String SCOPE_URLS = "email https://www.googleapis.com/auth/userinfo.profile"
-    final String clientId="1023196152723-6shlrh538pnm6n8b4mggd2hnvr37eaf3.apps.googleusercontent.com"
     final String callbackUrl = "http://localhost:8080/login/callBack"
-    final String clientSecret = "_0-p-ZMCe561LJ6Am9jZxAbU"
 
+    GrailsApplication grailsApplication
     String generateOauthURL(String redirectUrl){
-
+        String clientId=grailsApplication.config.google.oauth.clientId
         String oauthUrl="${AUTH_URL}?scope=${SCOPE_URLS}&redirect_uri=${redirectUrl}&response_type=code&client_id=${clientId}&access_type=offline&approval_prompt=force"
         oauthUrl
-
-    }
+  }
 
 
     Map generateTokens(String code) {
@@ -30,6 +29,8 @@ class LoginService {
     }
 
     String generateQueryStringForAccessToken(String code) {
+        String clientId=grailsApplication.config.google.oauth.clientId
+        String clientSecret=grailsApplication.config.google.oauth.clientSecret
 
 
         StringBuilder queryString = new StringBuilder("code=")

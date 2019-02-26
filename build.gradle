@@ -66,6 +66,7 @@ dependencies {
 
 bootRun {
     jvmArgs('-Dspring.output.ansi.enabled=always')
+    jvmArgs = ['-Dlocal.config.location=app-config.yml']
 }
 
 
