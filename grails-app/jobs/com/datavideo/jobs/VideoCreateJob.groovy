@@ -17,14 +17,10 @@ class VideoCreateJob {
         List<VideoDataEntry> videoDataEntryList=VideoDataEntry.findAllByVideoPath("NULL")
         videoDataEntryList.each {
             println "workCV2"
-            String[] str=it.videoName.split("_")
-            String constituencyName=str[3]
-            String year=str[1]
-            String electtionType=str[2]
-            createVideoService.convert(year,electtionType,constituencyName)
 
-            it.videoPath=it.videoName+".mp4"
-            it.save(flush:true)
+            createVideoService.convert(it)
+
+
         }
 
     }

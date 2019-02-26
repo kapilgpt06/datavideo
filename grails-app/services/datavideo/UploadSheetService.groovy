@@ -17,7 +17,6 @@ class UploadSheetService {
             folder.mkdirs()
         }
 
-        String filePath="/home/kapil/Project/datavideo/opt/d2v/data/"
 
         if(!DataFileEntry.findByFileName(fileName) && f){
             File fileDest=new File(folder,fileName)

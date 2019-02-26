@@ -18,8 +18,7 @@ class CheckDataFileJob {
 
             dataFileEntryList.each {
                 entryDataToDBService.entryToDB(it)
-                it.status="PROCESSED"
-                it.save(flush:true)
+
             }
         }
 

@@ -19,9 +19,8 @@ class UploadVideoJob {
             List<VideoDataEntry> videoDataEntryList=VideoDataEntry.findAllByVideoIdAndVideoPathNotEqual("NULL","NULL")
             videoDataEntryList.each {
                 Channel channel=it.ownerChannel
-                String videoId=uploadVideoService.uploadVideo(channel.accesssToken,"/home/kapil/opt/d2v/resource/"+it.videoPath)
-                it.videoId=videoId
-                it.save(flush:true)
+                uploadVideoService.uploadVideo(it)
+
             }
         }
     }

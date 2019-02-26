@@ -64,6 +64,9 @@ class EntryDataToDBService {
             videoName=videoName.delete(videoName.length()-4,videoName.length())
             VideoDataEntry videoDataEntry=new VideoDataEntry(ownerChannel: dataFileEntry.ownerChannel,videoName:videoName+"_"+cons)
             videoDataEntry.save(flush:true)
+
+            dataFileEntry.status="PROCESSED"
+            dataFileEntry.save(flush:true)
         }
 
     }

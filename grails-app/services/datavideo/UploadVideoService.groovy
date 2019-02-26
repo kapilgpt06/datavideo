@@ -22,11 +22,10 @@ class UploadVideoService {
     private static final String VIDEO_FILE_FORMAT = "video/*";
 
 
-    def serviceMethod() {
 
-    }
-
-    String uploadVideo(String accessToken,String videoPath) {
+    def uploadVideo(VideoDataEntry videoDataEntry) {
+        String accessToken=videoDataEntry.ownerChannel.accesssToken
+        String videoPath="/home/kapil/opt/d2v/"+videoDataEntry.ownerChannel.channelId+"/"+videoDataEntry.videoPath
         YouTube youtube
         String videoId=new String()
         try{
@@ -34,7 +33,7 @@ class UploadVideoService {
             JsonFactory JSON_FACTORY = new JacksonFactory();
 
             Credential credential = new Credential(BearerToken.authorizationHeaderAccessMethod()).setAccessToken(accessToken);
-
+                println credential.getExpiresInSeconds()
             youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
                     "youtube-cmdline-uploadvideo-sample").build();
 
@@ -71,7 +70,6 @@ class UploadVideoService {
             MediaHttpUploader uploader = videoInsert.getMediaHttpUploader();
 
             uploader.setDirectUploadEnabled(true);
-            uploader.setProgressListener(progressListener);
             Video returnedVideo = videoInsert.execute();
 
             println returnedVideo
@@ -84,6 +82,8 @@ class UploadVideoService {
             System.out.println("  - Privacy Status: " + returnedVideo.getStatus().getPrivacyStatus());
             System.out.println("  - Video Count: " + returnedVideo.getStatistics().getViewCount());
 
+            videoDataEntry.videoId=videoId
+            videoDataEntry.save(flush:true)
         } catch (
                 GoogleJsonResponseException e) {
             System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
@@ -96,6 +96,5 @@ class UploadVideoService {
             System.err.println("Throwable: " + t.getMessage());
             t.printStackTrace();
         }
-        return videoId
     }
 }

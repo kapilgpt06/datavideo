@@ -10,20 +10,20 @@ import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.ChannelListResponse
 import com.google.common.collect.Lists
 import grails.converters.JSON
+import grails.core.GrailsApplication
 import grails.transaction.Transactional
 
 @Transactional
 class ChannelService {
-
+GrailsApplication grailsApplication
     final String AUTH_URL = 'https://accounts.google.com/o/oauth2/auth'
     final String TOKEN_URL = 'https://accounts.google.com/o/oauth2/token'
-    final String clientId = "1023196152723-6shlrh538pnm6n8b4mggd2hnvr37eaf3.apps.googleusercontent.com"
     final String callbackUrl = "http://localhost:8080/channel/callBack"
-    final String clientSecret = "_0-p-ZMCe561LJ6Am9jZxAbU"
-
 
 
     String generateOauthURL(String redirectUrl) {
+        String clientId=grailsApplication.config.google.oauth.clientId
+
         String SCOPE_URLS="https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly"
         String oauthUrl = "${AUTH_URL}?scope=${SCOPE_URLS}&redirect_uri=${redirectUrl}&response_type=code&client_id=${clientId}&access_type=offline&approval_prompt=force"
         oauthUrl
@@ -38,6 +38,8 @@ class ChannelService {
     }
 
     String generateQueryStringForAccessToken(String code) {
+        String clientId=grailsApplication.config.google.oauth.clientId
+        String clientSecret=grailsApplication.config.google.oauth.clientSecret
 
 
         StringBuilder queryString = new StringBuilder("code=")
