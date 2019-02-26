@@ -26,14 +26,15 @@ class EntryDataToDBService {
         result
     }
 
-    def entryToDB(String excelSheetFilePath){
+    def entryToDB(DataFileEntry dataFileEntry){
+        String excelSheetFilePath= dataFileEntry.filePath
         fis = new FileInputStream(excelSheetFilePath);
         wb = WorkbookFactory.create(fis);
         sh1 = wb.getSheet("electors");
         sh2 = wb.getSheet("Cand_Wise");
 
         int j=4
-        for(int i=4;i<7;i++){
+        for(int i=4;i<5;i++){
 
             String state =capitalize( String.valueOf(sh1.getRow(i).getCell(1)).toLowerCase());
             String cons = capitalize(String.valueOf(sh1.getRow(i).getCell(3)).toLowerCase())
@@ -58,7 +59,13 @@ class EntryDataToDBService {
                 currentCons = String.valueOf(sh2.getRow(j+1).getCell(5));
                 j++
             }
+
+            StringBuilder videoName=new StringBuilder(dataFileEntry.fileName)
+            videoName=videoName.delete(videoName.length()-4,videoName.length())
+            VideoDataEntry videoDataEntry=new VideoDataEntry(ownerChannel: dataFileEntry.ownerChannel,videoName:videoName+"_"+cons)
+            videoDataEntry.save(flush:true)
         }
+
     }
 
     String indiaFormatNumber(Object object){

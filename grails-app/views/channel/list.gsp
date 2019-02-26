@@ -16,12 +16,16 @@
                 <th>Name</th>
                 <th>owner</th>
             </tr>
-            <g:each in="${channelList}" var="channel">
-                <tr>
-                    <td>${channel.channelId}</td>
-                    <td>${channel.channelName}</td>
-                    <td>${channel.ownerEmail}</td>
-                </tr>
+            <g:each in="${channelList}" var="channel" >
+                    <tr>
+                        <td>${channel.channelId}</td>
+                        <td>
+                            <g:link controller="channel" action="uploadSheet" params="[channelId:channel.channelId]" style="cursor: pointer">
+                                ${channel.channelName}
+                            </g:link>
+                        </td>
+                        <td>${channel.ownerEmail}</td>
+                    </tr>
             </g:each>
         </table>
     </div>

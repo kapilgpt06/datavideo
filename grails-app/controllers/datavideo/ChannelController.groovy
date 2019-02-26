@@ -3,6 +3,7 @@ package datavideo
 class ChannelController {
 
     ChannelService channelService
+    UploadSheetService uploadSheetService
     def list(){
         String userEmail=String.valueOf(session.getAttribute("userEmail"))
         List channelList=channelService.getChannelList(userEmail)
@@ -31,4 +32,15 @@ println token
         }
      }
 
+    def uploadSheet(){
+
+    }
+    def upload(){
+        if(uploadSheetService.upload(params)){
+            flash.message="Upload Succesfully"
+        }else{
+            flash.message="Something Wrong"
+        }
+        redirect(controller: "channel" ,action: "list")
+    }
 }

@@ -1,10 +1,9 @@
 package datavideo
 
 class Exp {
-static void main(String[] args){
-    Map map=[:]
-    map.name="kapil"
-    map.age="18"
-    println map
+static void main(String[] args)throws Exception{
+    String str="HEELO_HYE_HI"
+    String[] string=str.split("_")
+    println string[string.length-1]
 }
 }
