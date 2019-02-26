@@ -1,0 +1,13 @@
+google:
+  oauth:
+    clientId: 1023196152723-6shlrh538pnm6n8b4mggd2hnvr37eaf3.apps.googleusercontent.com
+    clientSecret: _0-p-ZMCe561LJ6Am9jZxAbU
+video:
+  subtitle:
+    tempFilePath: /home/kapil/opt/d2v/resource/sub.ass
+    filePath: /home/kapil/opt/d2v/resource/subtitles.ass
+  config:
+    tempFilePath: /home/kapil/opt/d2v/resource/conf.json
+    filePath: /home/kapil/opt/d2v/resource/config.json
+videoshow:
+  command: videoshow -c config.json -s subtitles.ass
