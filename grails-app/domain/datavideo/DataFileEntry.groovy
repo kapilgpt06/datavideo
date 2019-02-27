@@ -4,12 +4,13 @@ class DataFileEntry {
 
     String fileName
     Date dateCreated
-    String loginUserId
     String filePath
-    Channel ownerChannel
+    Channel channel
     String status="NULL"
+    User fileUploadBy
+    String year
+    String electionType
     static constraints = {
-        loginUserId nullable: true
         fileName unique: true
     }
 

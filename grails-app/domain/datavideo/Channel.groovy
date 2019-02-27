@@ -8,6 +8,8 @@ class Channel {
     String accesssToken
     String refreshToken
     Date tokenCreatedOn
+    Date dateCreated
+
 
     static constraints = {
     }

@@ -1,8 +1,6 @@
 package com.datavideo.jobs
 
 import datavideo.Channel
-import datavideo.DataFileEntry
-import datavideo.EntryDataToDBService
 import datavideo.UploadVideoService
 import datavideo.VideoDataEntry
 
@@ -14,14 +12,13 @@ class UploadVideoJob {
     }
 
     def execute(){
-        println("workUV1")
-        if(VideoDataEntry.findByVideoId("NULL")){
-            List<VideoDataEntry> videoDataEntryList=VideoDataEntry.findAllByVideoIdAndVideoPathNotEqual("NULL","NULL")
-            videoDataEntryList.each {
-                Channel channel=it.ownerChannel
-                uploadVideoService.uploadVideo(it)
+        println("upload video job work")
+        if(VideoDataEntry.findByVideoIdAndVideoPathNotEqual("NULL","NULL")){
+            println("upload video job detect")
+            VideoDataEntry videoDataEntry=VideoDataEntry.findByVideoIdAndVideoPathNotEqual("NULL","NULL")
+            uploadVideoService.uploadVideo(videoDataEntry)
 
-            }
+
         }
     }
 }

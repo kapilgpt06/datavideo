@@ -4,7 +4,6 @@ import com.google.api.client.auth.oauth2.BearerToken
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.client.googleapis.media.MediaHttpUploader
-import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.InputStreamContent
 import com.google.api.client.http.javanet.NetHttpTransport
@@ -43,14 +42,19 @@ class UploadVideoService {
     def uploadVideo(VideoDataEntry videoDataEntry) {
         String videoMode=grailsApplication.config.youtube.video.mode
         String videoPathPrefix=grailsApplication.config.video.path
-        String refreshToken=videoDataEntry.ownerChannel.refreshToken
-        if(checkAccessExpire(videoDataEntry.ownerChannel)){
+
+        String videoTittle=videoDataEntry.videoName.replace("_"," ")
+        String electionType=videoDataEntry.electionType
+        String year=videoDataEntry.year
+        String refreshToken=videoDataEntry.channel.refreshToken
+
+        if(checkAccessExpire(videoDataEntry.channel)){
             String newAccessToken=channelService.generateNewAccessTokenUsingRefreshToken(refreshToken)
-            channelService.saveNewAccessToken(newAccessToken,videoDataEntry.ownerChannel)
+            channelService.saveNewAccessToken(newAccessToken,videoDataEntry.channel)
         }
 
-        String accessToken=videoDataEntry.ownerChannel.accesssToken
-        String videoPath=videoPathPrefix+"/"+videoDataEntry.ownerChannel.channelId+"/"+videoDataEntry.videoPath
+        String accessToken=videoDataEntry.channel.accesssToken
+        String videoPath=videoPathPrefix+"/"+videoDataEntry.channel.channelId+"/"+videoDataEntry.videoPath
         YouTube youtube
         String videoId=new String()
         try{
@@ -59,7 +63,7 @@ class UploadVideoService {
 
             Credential credential = new Credential(BearerToken.authorizationHeaderAccessMethod()).setAccessToken(accessToken);
             youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-                    "youtube-cmdline-uploadvideo-sample").build();
+                    "Election Result video upload").build();
 
             System.out.println("Uploading: " + SAMPLE_VIDEO_FILENAME);
 
@@ -69,16 +73,15 @@ class UploadVideoService {
             videoObjectDefiningMetadata.setStatus(status);
             VideoSnippet snippet = new VideoSnippet();
             Calendar cal = Calendar.getInstance();
-            snippet.setTitle("Test Upload via Java on " + cal.getTime());
-            snippet.setDescription(
-                    "Video uploaded via YouTube Data API V3 using the Java library " + "on " + cal.getTime());
+            snippet.setTitle(videoTittle+" Constituency Result");
+            snippet.setDescription("This is India "+electionType+" Election Result");
 
             List<String> tags = new ArrayList<String>();
-            tags.add("test");
-            tags.add("example");
-            tags.add("java");
-            tags.add("YouTube Data API V3");
-            tags.add("erase me");
+            tags.add("Election");
+            tags.add(year);
+            tags.add(electionType);
+            tags.add("Goverment");
+            tags.add("People Time");
             snippet.setTags(tags);
 
             // Add the completed snippet object to the video resource.
@@ -106,7 +109,12 @@ class UploadVideoService {
             System.out.println("  - Privacy Status: " + returnedVideo.getStatus().getPrivacyStatus());
             System.out.println("  - Video Count: " + returnedVideo.getStatistics().getViewCount());
 
+
+            Calendar calendar=Calendar.getInstance()
+            Date date=calendar.getTime()
+
             videoDataEntry.videoId=videoId
+            videoDataEntry.videoUploadDate=date
             videoDataEntry.save(flush:true)
         } catch (
                 GoogleJsonResponseException e) {

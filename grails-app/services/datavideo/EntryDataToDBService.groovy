@@ -34,16 +34,15 @@ class EntryDataToDBService {
         sh2 = wb.getSheet("Cand_Wise");
 
         int j=4
-        for(int i=4;i<5;i++){
+        for(int i=4;i<6;i++){
 
             String state =capitalize( String.valueOf(sh1.getRow(i).getCell(1)).toLowerCase());
             String cons = capitalize(String.valueOf(sh1.getRow(i).getCell(3)).toLowerCase())
             String voters = indiaFormatNumber(sh1.getRow(i).getCell(4));
             String electors = indiaFormatNumber(sh1.getRow(i).getCell(5));
             String percentage = indiaFormatNumber(sh1.getRow(i).getCell(6));
-
-
             Constituency constituency=new Constituency(stateName: state,constituencyName: cons,totalVoters: voters,totalElectors: electors,percentage: percentage)
+
             String currentCons = String.valueOf(sh1.getRow(i).getCell(3));
 
 
@@ -54,15 +53,20 @@ class EntryDataToDBService {
                 String position = indiaFormatNumber(sh2.getRow(j).getCell(13));
 
                 Candidate candidate=new Candidate(stateName: state,candidateName: candidateName,partySign: partySign,totalVotesPolled: totalVotePolled,position: position)
-
                 constituency.addToCandidates(candidate).save(flush:true)
+
                 currentCons = String.valueOf(sh2.getRow(j+1).getCell(5));
                 j++
             }
 
             StringBuilder videoName=new StringBuilder(dataFileEntry.fileName)
             videoName=videoName.delete(videoName.length()-4,videoName.length())
-            VideoDataEntry videoDataEntry=new VideoDataEntry(ownerChannel: dataFileEntry.ownerChannel,videoName:videoName+"_"+cons)
+
+            String[] str=String.valueOf(videoName).split("_")
+            String year=str[1]
+            String electionType=str[2]
+            VideoDataEntry videoDataEntry=new VideoDataEntry(channel: dataFileEntry.channel,videoName:videoName+"_"+cons,dataFile: dataFileEntry,
+                                            year: year,electionType: electionType,constituency:constituency)
             videoDataEntry.save(flush:true)
 
             dataFileEntry.status="PROCESSED"

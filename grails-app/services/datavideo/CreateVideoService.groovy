@@ -3,8 +3,6 @@ package datavideo
 import grails.core.GrailsApplication
 import grails.transaction.Transactional
 
-import org.apache.poi.ss.usermodel.*
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -67,11 +65,7 @@ class CreateVideoService {
 
     void convert(VideoDataEntry videoDataEntry) throws Exception {
 
-        String[] str=videoDataEntry.videoName.split("_")
-        String constituencyName1=str[3]
-        String year1=str[1]
-        String electtionType=str[2]
-        Constituency constituency=Constituency.findByYearAndElectionTypeAndConstituencyName(year1,electtionType,constituencyName1)
+        Constituency constituency=videoDataEntry.constituency
 
             loadSubtitles()
 
@@ -80,7 +74,7 @@ class CreateVideoService {
             String totalVoters=constituency.totalVoters
             String totalElectors=constituency.totalElectors
             String percentage=constituency.percentage
-            String year=constituency.year
+//            String year=constituency.year
 
             //this is use to set first and second slide timming
             String firstTimming = new String();
@@ -154,14 +148,19 @@ class CreateVideoService {
             subtitles+=firstTimming+secondTiming+thirdTiming+fourthTiming
 
             saveSubtitle();
-            String channelId=videoDataEntry.ownerChannel.channelId
+            String channelId=videoDataEntry.channel.channelId
             setConfigFile(String.valueOf(to), "../"+channelId+"/"+videoDataEntry.videoName);
 
             String command=grailsApplication.config.videoshow.command
             String videoPath=grailsApplication.config.video.path
             madeVideo(videoPath+"/resource",command);
 
+
+            Calendar calendar=Calendar.getInstance()
+            Date date=calendar.getTime()
+
             videoDataEntry.videoPath=videoDataEntry.videoName+".mp4"
+            videoDataEntry.videoCreatedDate=date
             videoDataEntry.save(flush:true)
 
 

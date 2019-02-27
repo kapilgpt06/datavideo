@@ -11,9 +11,10 @@ class CheckDataFileJob {
     }
 
     def execute(){
-        println("workdb1")
+        println("data entry job work")
         if(DataFileEntry.findByStatus("NULL")){
-            println("workdb2")
+            println("data entry job detect")
+
             List<DataFileEntry> dataFileEntryList=DataFileEntry.findAllByStatus("NULL")
 
             dataFileEntryList.each {
