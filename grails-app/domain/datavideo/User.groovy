@@ -12,5 +12,7 @@ class User {
         userId nullable: true
         accessToken nullable: true
         refreshToken nullable: true
+        name nullable: true
+        email unique: true
     }
 }

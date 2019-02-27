@@ -14,18 +14,43 @@ import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.Video
 import com.google.api.services.youtube.model.VideoSnippet
 import com.google.api.services.youtube.model.VideoStatus
+import grails.core.GrailsApplication
 import grails.transaction.Transactional
 
 @Transactional
 class UploadVideoService {
+    GrailsApplication grailsApplication
+    ChannelService channelService
     private static final String SAMPLE_VIDEO_FILENAME = "sample-video.mp4";
     private static final String VIDEO_FILE_FORMAT = "video/*";
 
+    boolean checkAccessExpire(Channel channel){
+        boolean flag=false
+        Date date=channel.tokenCreatedOn
+        long tokenCreatedMS=date.getTime()
+
+        long currentMS=new Date().getTime()
+
+        long differnce=(currentMS-tokenCreatedMS)/(1000*60)
+        println differnce
+        if(differnce>55)
+            flag=true
+        flag
+
+    }
 
 
     def uploadVideo(VideoDataEntry videoDataEntry) {
+        String videoMode=grailsApplication.config.youtube.video.mode
+        String videoPathPrefix=grailsApplication.config.video.path
+        String refreshToken=videoDataEntry.ownerChannel.refreshToken
+        if(checkAccessExpire(videoDataEntry.ownerChannel)){
+            String newAccessToken=channelService.generateNewAccessTokenUsingRefreshToken(refreshToken)
+            channelService.saveNewAccessToken(newAccessToken,videoDataEntry.ownerChannel)
+        }
+
         String accessToken=videoDataEntry.ownerChannel.accesssToken
-        String videoPath="/home/kapil/opt/d2v/"+videoDataEntry.ownerChannel.channelId+"/"+videoDataEntry.videoPath
+        String videoPath=videoPathPrefix+"/"+videoDataEntry.ownerChannel.channelId+"/"+videoDataEntry.videoPath
         YouTube youtube
         String videoId=new String()
         try{
@@ -33,7 +58,6 @@ class UploadVideoService {
             JsonFactory JSON_FACTORY = new JacksonFactory();
 
             Credential credential = new Credential(BearerToken.authorizationHeaderAccessMethod()).setAccessToken(accessToken);
-                println credential.getExpiresInSeconds()
             youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
                     "youtube-cmdline-uploadvideo-sample").build();
 
@@ -41,7 +65,7 @@ class UploadVideoService {
 
             Video videoObjectDefiningMetadata = new Video();
       VideoStatus status = new VideoStatus();
-            status.setPrivacyStatus("private");
+            status.setPrivacyStatus(videoMode);
             videoObjectDefiningMetadata.setStatus(status);
             VideoSnippet snippet = new VideoSnippet();
             Calendar cal = Calendar.getInstance();

@@ -1,26 +1,19 @@
 package datavideo
 
+import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.ss.usermodel.Workbook
+import org.apache.poi.ss.usermodel.WorkbookFactory
+
 class Exp {
 static void main(String[] args)throws Exception{
-    Runtime rt = Runtime.getRuntime();
-    File dir = new File("/home/kapil/Project/videoshow/new")
-    if(!dir.exists()){
-        dir.mkdirs();
-    }
-    try {
-        Process process = rt.exec("videoshow -c ../videoshow/config.json -s ../videoshow/subtitles.ass ", null, dir);
-        process.waitFor();
-        BufferedReader reader =
-                new BufferedReader(new InputStreamReader(process.getInputStream()));
+    String str="/home/kapil/opt/d2v/UCKl5pBcN9bl0cyrzaHHYtKA/election_2014_loksabha.xls"
 
-        String line = "";
-        while ((line = reader.readLine()) != null) {
+    FileInputStream fis = new FileInputStream(str);
 
-            System.out.println(line + "\n");
-        }
+    Workbook wb = WorkbookFactory.create(fis);
+    Sheet sh1 = wb.getSheet("electors");
+    Sheet sh2 = wb.getSheet("Cand_Wise");
 
-    } catch (Exception e) {
-        System.err.println(e);
-    }
+    println sh1.getRow(3).getCell(1)
 }
 }

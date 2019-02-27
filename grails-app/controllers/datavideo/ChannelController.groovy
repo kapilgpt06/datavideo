@@ -5,8 +5,7 @@ class ChannelController {
     ChannelService channelService
     UploadSheetService uploadSheetService
     def list(){
-        String userEmail=String.valueOf(session.getAttribute("userEmail"))
-        List channelList=channelService.getChannelList(userEmail)
+        List channelList=channelService.getChannelList()
         [channelList:channelList]
     }
 
@@ -20,6 +19,7 @@ class ChannelController {
         Map token=channelService.generateTokens(params.code as String)
 println token
         Map channelDetails=channelService.getChannel(token.accessToken,token.refreshToken)
+        println channelDetails
         String userEmail=String.valueOf(session.getAttribute("userEmail"))
         if(channelService.isChannelExist(channelDetails.channelId)){
             channelService.updateToken(channelDetails)
@@ -36,11 +36,9 @@ println token
 
     }
     def upload(){
-        if(uploadSheetService.upload(params)){
-            flash.message="Upload Succesfully"
-        }else{
-            flash.message="Something Wrong"
-        }
+        String message=uploadSheetService.upload(params)
+
+            flash.message=message
         redirect(controller: "channel" ,action: "list")
     }
 }

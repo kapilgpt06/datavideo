@@ -2,12 +2,25 @@ google:
   oauth:
     clientId: 1023196152723-6shlrh538pnm6n8b4mggd2hnvr37eaf3.apps.googleusercontent.com
     clientSecret: _0-p-ZMCe561LJ6Am9jZxAbU
+
+#please ensure resource folder is should be in this directory
+#resource file contain image,audio,conf.json,sub.ass file
 video:
-  subtitle:
-    tempFilePath: /home/kapil/opt/d2v/resource/sub.ass
-    filePath: /home/kapil/opt/d2v/resource/subtitles.ass
-  config:
-    tempFilePath: /home/kapil/opt/d2v/resource/conf.json
-    filePath: /home/kapil/opt/d2v/resource/config.json
+  path: /home/kapil/opt/d2v
+
+#please check resource are available before making command ex:-audio
 videoshow:
   command: videoshow -c config.json -s subtitles.ass
+
+user:
+  admin:
+    admin1:
+      email: kapilgpt06@gmail.com
+      name: kapil
+    admin2:
+      email: kapil@techcrumb.com
+
+youtube:
+  video:
+    mode: private
+

@@ -30,10 +30,11 @@
             </g:each>
         </table>
     </div>
-
-    <g:if test='${flash.message}'>
-        <div class="login_message">${flash.message}</div>
-    </g:if>
+    <center>
+        <g:if test='${flash.message}'>
+            <div style="color: #a60000" class="login_message">${flash.message}</div>
+        </g:if>
+    </center>
     <g:link controller="channel" action="index">
         <button type="button" class="btn btn-primary">Add Channel</button>
     </g:link>

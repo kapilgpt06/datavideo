@@ -7,6 +7,7 @@ class Channel {
     User owner
     String accesssToken
     String refreshToken
+    Date tokenCreatedOn
 
     static constraints = {
     }

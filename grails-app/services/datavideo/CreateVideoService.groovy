@@ -1,5 +1,6 @@
 package datavideo
 
+import grails.core.GrailsApplication
 import grails.transaction.Transactional
 
 import org.apache.poi.ss.usermodel.*
@@ -9,29 +10,18 @@ import java.nio.file.Paths;
 
 @Transactional
 class CreateVideoService {
+    GrailsApplication grailsApplication
 
-    def serviceMethod() {
 
-    }
-    private static Workbook wb;
-    private static Sheet sh1;
-    private static Sheet sh2;
-    private static FileInputStream fis;
-    private static FileOutputStream fos;
-    private static Row row;
-    private static Cell cell;
-    private static final String subtitleTempPath = "/home/kapil/opt/d2v/resource/sub.ass";
-    private static final String subtitleFilePath = "/home/kapil/opt/d2v/resource/subtitles.ass";
-    private static final String configTempFilePath = "/home/kapil/opt/d2v/resource/conf.json";
-    private static final String configFilePath = "/home/kapil/opt/d2v/resource/config.json";
-//    private static final String makeVideoFilePath = "/home/kapil/opt/d2v/resource";
     private static String subtitles = new String();
 
-    static void loadSubtitles() throws Exception {
+     void loadSubtitles() throws Exception {
+        String subtitleTempPath=grailsApplication.config.video.path+"/resource/sub.ass"
         subtitles = new String(Files.readAllBytes(Paths.get(subtitleTempPath)));
     }
 
-    static void saveSubtitle() throws Exception {
+     void saveSubtitle() throws Exception {
+         String subtitleFilePath=grailsApplication.config.video.path+"/resource/subtitles.ass"
         File f = new File(subtitleFilePath);
         Writer writer = new FileWriter(f);
         BufferedWriter bufferedWriter = new BufferedWriter(writer);
@@ -40,7 +30,9 @@ class CreateVideoService {
         bufferedWriter.close();
     }
 
-    static void setConfigFile(String time, String videoName) throws Exception {
+     void setConfigFile(String time, String videoName) throws Exception {
+         String configTempFilePath=grailsApplication.config.video.path+"/resource/conf.json"
+         String configFilePath=grailsApplication.config.video.path+"/resource/config.json"
         String data = new String(Files.readAllBytes(Paths.get(configTempFilePath)));
         data = data.replace("tcTime", time);
         data = data.replace("tcVideoName", videoName + ".mp4");
@@ -52,12 +44,12 @@ class CreateVideoService {
         bufferedWriter.close();
     }
 
-    static void madeVideo(String makeVideoFilePath) {
+    void madeVideo(String makeVideoFilePath,String command) {
         Runtime rt = Runtime.getRuntime();
         File dir = new File(makeVideoFilePath)
 
         try {
-            Process process = rt.exec("videoshow -c config.json -s subtitles.ass", null, dir);
+            Process process = rt.exec(command, null, dir);
             process.waitFor();
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -164,7 +156,10 @@ class CreateVideoService {
             saveSubtitle();
             String channelId=videoDataEntry.ownerChannel.channelId
             setConfigFile(String.valueOf(to), "../"+channelId+"/"+videoDataEntry.videoName);
-            madeVideo("/home/kapil/opt/d2v/resource");
+
+            String command=grailsApplication.config.videoshow.command
+            String videoPath=grailsApplication.config.video.path
+            madeVideo(videoPath+"/resource",command);
 
             videoDataEntry.videoPath=videoDataEntry.videoName+".mp4"
             videoDataEntry.save(flush:true)

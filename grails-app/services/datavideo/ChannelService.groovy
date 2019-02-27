@@ -13,6 +13,8 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import grails.transaction.Transactional
 
+import java.nio.file.AccessDeniedException
+
 @Transactional
 class ChannelService {
 GrailsApplication grailsApplication
@@ -136,19 +138,21 @@ GrailsApplication grailsApplication
     def saveChannel(Map channelDetails,String userEmail){
         println(channelDetails)
         User user=User.findByEmail(userEmail)
+        Calendar calendar=Calendar.getInstance()
+        Date date=calendar.getTime()
         Channel channel=new Channel(channelId: channelDetails.channelId,channelName: channelDetails.title,owner:user,
-                accesssToken: channelDetails.accessToken,refreshToken: channelDetails.refreshToken )
+                accesssToken: channelDetails.accessToken,refreshToken: channelDetails.refreshToken ,tokenCreatedOn: date)
         channel.save(flush:true)
     }
     def updateToken(Map channelDetail){
         Channel channel=Channel.findByChannelId(channelDetail.channelId)
         channel.accesssToken=channelDetail.accessToken
         channel.refreshToken=channelDetail.refreshToken
+        channel.tokenCreatedOn=new Date()
         channel.save(flush:true)
     }
-    List<ChannelDTO> getChannelList(String userEmail){
-        User currentUser=User.findByEmail(userEmail)
-        List channelList=Channel.findAllByOwner(currentUser)
+    List<ChannelDTO> getChannelList(){
+        List channelList=Channel.list()
         List<ChannelDTO> channelListDTO=[]
         channelList.each {
             ChannelDTO channelDTO=new ChannelDTO()
@@ -158,6 +162,63 @@ GrailsApplication grailsApplication
             channelListDTO<<channelDTO
         }
         channelListDTO
+    }
+
+    String generateQueryStringForNewAccessToken(String refreshToken, String clientId, String clientSecret) {
+
+        StringBuilder queryString = new StringBuilder("refresh_token=")
+        queryString.with {
+            append(refreshToken);
+            append("&client_id=");
+            append(encodeInUTF8(clientId));
+            append("&client_secret=");
+            append(encodeInUTF8(clientSecret));
+            append("&grant_type=");
+            append(encodeInUTF8('refresh_token'))
+        }
+        return queryString.toString()
+    }
+    String generateNewAccessTokenUsingRefreshToken(String refreshToken) {
+        String clientId=grailsApplication.config.google.oauth.clientId
+        String clientSecret=grailsApplication.config.google.oauth.clientSecret
+        return generateNewAccessTokenUsingRefreshToken(refreshToken,clientId,clientSecret)
+    }
+
+    String generateNewAccessTokenUsingRefreshToken(String refreshToken, String clientId, String clientSecret) {
+        String queryString = generateQueryStringForNewAccessToken(refreshToken,clientId,clientSecret)
+        HttpURLConnection connection = loadConnectionSettings(queryString.size())
+        try {
+            postTokensRequest(connection, queryString)
+            connection.connect()
+
+            int responseCode=connection.responseCode;
+            String respMessage=connection.responseMessage;
+
+            if (responseCode!=HttpURLConnection.HTTP_OK)
+            {
+                String responseStr=connection.getErrorStream().text;
+
+                throw new AccessDeniedException("Failed to get new access token from refreshToken. code:"+responseCode +" message:"+ responseStr)
+            }
+            else
+            {
+                String content = connection.inputStream.text;
+                def responseJson = JSON.parse(content)
+                String accessToken = responseJson?.access_token;
+                return accessToken;
+            }
+        } finally {
+            if(connection)
+                connection.disconnect()
+        }
+    }
+
+    def saveNewAccessToken(String accessToken,Channel channel){
+        Calendar calendar=Calendar.getInstance()
+        Date date=calendar.getTime()
+        channel.accesssToken=accessToken
+        channel.tokenCreatedOn=date
+        channel.save(flush:true)
     }
 
 }
