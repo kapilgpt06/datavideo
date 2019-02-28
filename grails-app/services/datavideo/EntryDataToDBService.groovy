@@ -34,7 +34,7 @@ class EntryDataToDBService {
         sh2 = wb.getSheet("Cand_Wise");
 
         int j=4
-        for(int i=4;i<6;i++){
+        for(int i=4;i<5;i++){
 
             String state =capitalize( String.valueOf(sh1.getRow(i).getCell(1)).toLowerCase());
             String cons = capitalize(String.valueOf(sh1.getRow(i).getCell(3)).toLowerCase())

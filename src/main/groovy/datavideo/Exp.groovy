@@ -6,7 +6,16 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 
 class Exp {
 static void main(String[] args)throws Exception {
-    String str="HEELO_HELLO_HELLO"
-    println str.replace("_"," ")
+    Map map=[
+        "code" : 403,
+        "errors" : [ [
+                         "domain" : "youtube.quota",
+                         "message" : "The request cannot be completed because you have exceeded your <a href=\"/youtube/v3/getting-started#quota\">quota</a>.",
+                         "reason" : "quotaExceeded"
+                     ] ],
+        "message" : "The request cannot be completed because you have exceeded your <a href=\"/youtube/v3/getting-started#quota\">quota</a>."
+    ]
+
+    println map.errors[0].domain
 }
 }

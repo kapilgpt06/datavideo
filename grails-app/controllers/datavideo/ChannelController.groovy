@@ -34,7 +34,16 @@ class ChannelController {
     }
 
     def uploadSheet() {
+        List dataFileList=uploadSheetService.dataFileList()
+        [dataFileList:dataFileList]
+    }
 
+    def dataFile(){
+
+        Long dataFileId=Double.parseDouble(params.dataFileId)
+        DataFileEntry dataFileEntry=DataFileEntry.findById(dataFileId)
+        List<VideoDataEntryDTO> videoList=uploadSheetService.videoDataList(dataFileEntry)
+        [videoList:videoList]
     }
 
     def upload() {

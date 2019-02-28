@@ -1,5 +1,6 @@
 package datavideo
 
+import com.datavideo.jobs.UploadVideoJob
 import com.google.api.client.auth.oauth2.BearerToken
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
@@ -23,41 +24,40 @@ class UploadVideoService {
     private static final String SAMPLE_VIDEO_FILENAME = "sample-video.mp4";
     private static final String VIDEO_FILE_FORMAT = "video/*";
 
-    boolean checkAccessExpire(Channel channel){
-        boolean flag=false
-        Date date=channel.tokenCreatedOn
-        long tokenCreatedMS=date.getTime()
+    boolean checkAccessExpire(Channel channel) {
+        boolean flag = false
+        Date date = channel.tokenCreatedOn
+        long tokenCreatedMS = date.getTime()
 
-        long currentMS=new Date().getTime()
+        long currentMS = new Date().getTime()
 
-        long differnce=(currentMS-tokenCreatedMS)/(1000*60)
-        println differnce
-        if(differnce>55)
-            flag=true
+        long differnce = (currentMS - tokenCreatedMS) / (1000 * 60)
+        if (differnce > 55)
+            flag = true
         flag
 
     }
 
 
     def uploadVideo(VideoDataEntry videoDataEntry) {
-        String videoMode=grailsApplication.config.youtube.video.mode
-        String videoPathPrefix=grailsApplication.config.video.path
+        String videoMode = grailsApplication.config.youtube.video.mode
+        String videoPathPrefix = grailsApplication.config.video.path
 
-        String videoTittle=videoDataEntry.videoName.replace("_"," ")
-        String electionType=videoDataEntry.electionType
-        String year=videoDataEntry.year
-        String refreshToken=videoDataEntry.channel.refreshToken
+        String videoTittle = videoDataEntry.videoName.replace("_", " ")
+        String electionType = videoDataEntry.electionType
+        String year = videoDataEntry.year
+        String refreshToken = videoDataEntry.channel.refreshToken
 
-        if(checkAccessExpire(videoDataEntry.channel)){
-            String newAccessToken=channelService.generateNewAccessTokenUsingRefreshToken(refreshToken)
-            channelService.saveNewAccessToken(newAccessToken,videoDataEntry.channel)
+        if (checkAccessExpire(videoDataEntry.channel)) {
+            String newAccessToken = channelService.generateNewAccessTokenUsingRefreshToken(refreshToken)
+            channelService.saveNewAccessToken(newAccessToken, videoDataEntry.channel)
         }
 
-        String accessToken=videoDataEntry.channel.accesssToken
-        String videoPath=videoPathPrefix+"/"+videoDataEntry.channel.channelId+"/"+videoDataEntry.videoPath
+        String accessToken = videoDataEntry.channel.accesssToken
+        String videoPath = videoPathPrefix + "/" + videoDataEntry.channel.channelId + "/" + videoDataEntry.videoPath
         YouTube youtube
-        String videoId=new String()
-        try{
+        String videoId = new String()
+        try {
             HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
             JsonFactory JSON_FACTORY = new JacksonFactory();
 
@@ -65,16 +65,16 @@ class UploadVideoService {
             youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
                     "Election Result video upload").build();
 
-            System.out.println("Uploading: " + SAMPLE_VIDEO_FILENAME);
+            System.out.println("Uploading: " + videoTittle);
 
             Video videoObjectDefiningMetadata = new Video();
-      VideoStatus status = new VideoStatus();
+            VideoStatus status = new VideoStatus();
             status.setPrivacyStatus(videoMode);
             videoObjectDefiningMetadata.setStatus(status);
             VideoSnippet snippet = new VideoSnippet();
             Calendar cal = Calendar.getInstance();
-            snippet.setTitle(videoTittle+" Constituency Result");
-            snippet.setDescription("This is India "+electionType+" Election Result");
+            snippet.setTitle(videoTittle + " Constituency Result");
+            snippet.setDescription("This is India " + electionType + " Election Result");
 
             List<String> tags = new ArrayList<String>();
             tags.add("Election");
@@ -90,7 +90,7 @@ class UploadVideoService {
             InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT,
                     new FileInputStream(videoPath));
 
-      YouTube.Videos.Insert videoInsert = youtube.videos()
+            YouTube.Videos.Insert videoInsert = youtube.videos()
                     .insert("snippet,statistics,status", videoObjectDefiningMetadata, mediaContent);
 
             // Set the upload type and add an event listener.
@@ -100,7 +100,7 @@ class UploadVideoService {
             Video returnedVideo = videoInsert.execute();
 
             println returnedVideo
-            videoId=returnedVideo.getId()
+            videoId = returnedVideo.getId()
             // Print data about the newly inserted video from the API response.
             System.out.println("\n================== Returned Video ==================\n");
             System.out.println("  - Id: " + returnedVideo.getId());
@@ -110,23 +110,32 @@ class UploadVideoService {
             System.out.println("  - Video Count: " + returnedVideo.getStatistics().getViewCount());
 
 
-            Calendar calendar=Calendar.getInstance()
-            Date date=calendar.getTime()
+            Calendar calendar = Calendar.getInstance()
+            Date date = calendar.getTime()
 
-            videoDataEntry.videoId=videoId
-            videoDataEntry.videoUploadDate=date
-            videoDataEntry.save(flush:true)
-        } catch (
-                GoogleJsonResponseException e) {
-            System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
-                    + e.getDetails().getMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println("IOException: " + e.getMessage());
-            e.printStackTrace();
-        } catch (Throwable t) {
-            System.err.println("Throwable: " + t.getMessage());
-            t.printStackTrace();
+            videoDataEntry.videoId = videoId
+            videoDataEntry.videoUploadDate = date
+            videoDataEntry.save(flush: true)
+        }
+        catch (Throwable t) {
+
+            String exceptionClass= t.getClass().getName()
+            String exceptionMessage=t.getMessage()
+            UploadVideoJob.allIsWell=false
+            UploadVideoJob.date=new Date()
+            sendMail(exceptionClass,exceptionMessage)
+            System.err.println(exceptionMessage)
         }
     }
+
+    def sendMail(String subjectMsg,String message) {
+        sendMail {
+            to "kapil@techcrumb.com"
+            subject subjectMsg
+            body message
+
+        }
+    }
+
+
 }

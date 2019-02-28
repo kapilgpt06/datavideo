@@ -16,7 +16,6 @@ GrailsApplication grailsApplication
             }
         }
 
-        println grailsApplication.config.user.admin
     }
     def destroy = {
     }

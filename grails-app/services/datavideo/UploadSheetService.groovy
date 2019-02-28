@@ -10,6 +10,40 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 class UploadSheetService {
     GrailsApplication grailsApplication
 
+    List dataFileList(){
+        List<DataFileEntry> dataFileEntryList=DataFileEntry.list()
+        List<DataFileEntryDTO> dataFileEntryDTOList=[]
+        dataFileEntryList.each {
+            DataFileEntryDTO dataFileEntryDTO=new DataFileEntryDTO()
+            dataFileEntryDTO.id=it.id
+            dataFileEntryDTO.fileName=it.fileName.capitalize()
+            dataFileEntryDTO.dateCreated=it.dateCreated
+            dataFileEntryDTO.channelName=it.channel.channelName
+            dataFileEntryDTO.status=it.status
+            dataFileEntryDTO.fileUploadBy=it.fileUploadBy.email
+            dataFileEntryDTOList<<dataFileEntryDTO
+        }
+        dataFileEntryDTOList
+    }
+
+    List<VideoDataEntryDTO> videoDataList(DataFileEntry dataFileEntry){
+        List<VideoDataEntry> videoDataEntryList=VideoDataEntry.findAllByDataFile(dataFileEntry)
+        List<VideoDataEntryDTO> videoDataEntryDTOList=[]
+        videoDataEntryList.each {
+            VideoDataEntryDTO videoDataEntryDTO=new VideoDataEntryDTO()
+            videoDataEntryDTO.videoName=it.videoName
+            videoDataEntryDTO.videocreated=it.videoPath.equals("NULL")?"NULL":"CREATED"
+            videoDataEntryDTO.videoUploaded=it.videoId.equals("NULL")?"NULL":"UPLOADED"
+            videoDataEntryDTO.channelName=it.channel.channelName
+            videoDataEntryDTO.uploadBy=it.dataFile.fileUploadBy.email
+            videoDataEntryDTO.videoCreatedDate=it.videoCreatedDate
+            videoDataEntryDTO.videoUploadDate=it.videoUploadDate
+            videoDataEntryDTO.videoURL=it.videoId.equals("NULL")?"NULL":"https://www.youtube.com/watch?v="+it.videoId
+            videoDataEntryDTOList<<videoDataEntryDTO
+        }
+        videoDataEntryDTOList
+    }
+
     String upload(Map params,String userEmail) {
         String filePath = grailsApplication.config.video.path
         String message = "File already exist"

@@ -3,6 +3,7 @@ package com.datavideo.jobs
 import datavideo.CreateVideoService
 import datavideo.EntryDataToDBService
 import datavideo.VideoDataEntry
+import org.quartz.core.QuartzScheduler
 
 class VideoCreateJob {
     def concurrent=false

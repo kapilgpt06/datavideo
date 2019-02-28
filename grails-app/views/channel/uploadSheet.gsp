@@ -10,9 +10,31 @@
 <body>
 <div>
     <center>
+        <h1 style="color: brown">Uploaded Sheet</h1>
+
+        <table>
+            <tr><th>File Name </th>
+                <th>Channel Name</th>
+                <th>UploadedBy</th>
+                <th>Uploaded Date</th>
+                <th>Status</th>
+            </tr>
+            <g:each in="${dataFileList}" var="dataFile" >
+                <tr>
+                    <td>
+                        <g:link controller="channel" action="dataFile" params="[dataFileId: dataFile.id]" style="cursor: pointer">
+                            ${dataFile.fileName}</td>
+                        </g:link>
+                    <td>${dataFile.channelName}</td>
+                    <td>${dataFile.fileUploadBy}</td>
+                    <td>${dataFile.dateCreated}</td>
+                    <td>${dataFile.status}</td>
+                </tr>
+            </g:each>
+        </table>
+        <br><br>
         <h2 style="color: #761c19">Sheet Format should be Like this </h2>
         <h4 style="color: #761c19">Please check before upload sheet</h4>
-        <br><br>
         <h3>Electors table</h3><asset:image src="electors.png" style="height: 130px"></asset:image>
         <h3>Candidate table</h3><asset:image src="candidate.png" style="height: 130px"></asset:image>
 
