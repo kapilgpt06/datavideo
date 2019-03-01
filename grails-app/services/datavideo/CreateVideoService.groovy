@@ -84,45 +84,23 @@ class CreateVideoService {
             firstTimming+="Dialogue: Marked=0,0:00:06.00,0:00:10.00,new,NTP,0200,0000,0200,,No of Voters \\N{\\b1\\c&H1011EC&}"+totalVoters+"\n"
             firstTimming+="Dialogue: Marked=0,0:00:08.00,0:00:10.00,new,NTP,0000,0000,0120,,Poll (%) \\N{\\b1\\c&H1011EC&}"+percentage+"%\n\n\n"
 
-            List<Candidate> candidateList=constituency.candidates.toList()
-            int noOfCandidate=candidateList.size()
-//            println(noOfCandidate)
-            int noOfCandidatePerSlide=9
-            int noOfSlide=(noOfCandidate/noOfCandidatePerSlide)+1 //no of candidate name slide
-            int to=10 //current last time
-            int from=10
+
+            List<Candidate> candidateList=Candidate.findAllByConstituencyAndPositionGreaterThan(constituency,8)
+
             String secondTiming=new String()
-            for(int i=1;i<=noOfCandidate;i++){
-                int slideNo=((i-1)/noOfCandidatePerSlide)+1
-                int candidateNoPerSlide=(i-1)%noOfCandidatePerSlide
-                int currentSlideLastTime=(noOfCandidate/(noOfCandidatePerSlide*slideNo))>=1?noOfCandidatePerSlide*2:(noOfCandidate%noOfCandidatePerSlide)*2
-                String candidateName=candidateList[i-1].candidateName
-                String partySign=candidateList[i-1].partySign
 
-                secondTiming+="Dialogue: Marked=0,0:00:"+from+".00,0:00:"+(currentSlideLastTime+to)+".00,style1,NTP,0000,0000,0"+(210-(20*candidateNoPerSlide))+",,"+i+". "+candidateName+"{\\b1} ("+partySign+") \n"
-                from+=2
-                if(from==currentSlideLastTime+to){
-                    to=from
-                }
-            }
+            int from=10
+            int to=(candidateList.size()*2)+from
+            int m=1
             secondTiming+="Dialogue: Marked=0,0:00:10.00,0:00:"+to+".00,new,NTP,0000,0000,0240,,{\\b1}Election Candidates \n\n\n"
-//            println(from+" "+to)
-//            println(secondTiming)
-
-            Candidate firstCandidate=new Candidate()
-            Candidate secondCandidate=new Candidate()
-            Candidate thirdCandidate=new Candidate()
             candidateList.each {
-                if (it.position == '1') {
-                    firstCandidate = it
-                }
-                if (it.position == '2') {
-                    secondCandidate = it
-                }
-                if (it.position == '3') {
-                    thirdCandidate = it
-                }
+                secondTiming+="Dialogue: Marked=0,0:00:"+from+".00,0:00:"+to+".00,style1,NTP,0000,0000,0"+(220-(20*m))+",,"+m+". "+it.candidateName+"{\\b1} ("+it.partySign+") \n"
+                from+=2
+                m++
             }
+            Candidate firstCandidate=Candidate.findByConstituencyAndPosition(constituency,1)
+            Candidate secondCandidate=Candidate.findByConstituencyAndPosition(constituency,2)
+            Candidate thirdCandidate=Candidate.findByConstituencyAndPosition(constituency,3)
             String thirdTiming=new String()
             to+=(2*4)
             thirdTiming+="Dialogue: Marked=0,0:00:"+from+".00,0:00:"+to+".00,style2,NTP,0000,0000,0240,,{\\b1}Election Results\n"

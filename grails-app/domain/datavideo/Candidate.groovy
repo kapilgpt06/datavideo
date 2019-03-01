@@ -7,7 +7,7 @@ class Candidate {
     String candidateName
     String partySign
     String totalVotesPolled
-    String position
+    int position
     static constraints = {
 
     }

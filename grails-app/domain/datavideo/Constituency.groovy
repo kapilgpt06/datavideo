@@ -8,8 +8,8 @@ class Constituency {
     String totalElectors
     String percentage
 
-
     static hasMany = [candidates:Candidate]
     static constraints = {
+
     }
 }
