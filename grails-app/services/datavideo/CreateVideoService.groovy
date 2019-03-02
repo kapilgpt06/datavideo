@@ -85,23 +85,31 @@ class CreateVideoService {
             firstTimming+="Dialogue: Marked=0,0:00:08.00,0:00:10.00,new,NTP,0000,0000,0120,,Poll (%) \\N{\\b1\\c&H1011EC&}"+percentage+"%\n\n\n"
 
 
-            List<Candidate> candidateList=Candidate.findAllByConstituencyAndPositionGreaterThan(constituency,8)
+            List<Candidate> candidateList=Candidate.findAllByConstituencyAndPositionLessThan(constituency,8)
 
             String secondTiming=new String()
 
             int from=10
             int to=(candidateList.size()*2)+from
+            if(candidateList.candidateName.contains("None Of The Above")){
+                to=((candidateList.size()-1)*2)+from
+            }
             int m=1
+            println "contain NOTA "+candidateList.candidateName.contains("None Of The Above")
             secondTiming+="Dialogue: Marked=0,0:00:10.00,0:00:"+to+".00,new,NTP,0000,0000,0240,,{\\b1}Election Candidates \n\n\n"
             candidateList.each {
-                secondTiming+="Dialogue: Marked=0,0:00:"+from+".00,0:00:"+to+".00,style1,NTP,0000,0000,0"+(220-(20*m))+",,"+m+". "+it.candidateName+"{\\b1} ("+it.partySign+") \n"
-                from+=2
-                m++
+                println it
+                if(it.candidateName.split(" |\\.|\\-").join()!="NoneOfTheAbove"){
+                    secondTiming+="Dialogue: Marked=0,0:00:"+from+".00,0:00:"+to+".00,style1,NTP,0000,0000,0"+(220-(20*m))+",,"+m+". "+it.candidateName+"{\\b1} ("+it.partySign+") \n"
+                    from+=2
+                    m++
+                }
             }
             Candidate firstCandidate=Candidate.findByConstituencyAndPosition(constituency,1)
             Candidate secondCandidate=Candidate.findByConstituencyAndPosition(constituency,2)
             Candidate thirdCandidate=Candidate.findByConstituencyAndPosition(constituency,3)
             String thirdTiming=new String()
+            from=to
             to+=(2*4)
             thirdTiming+="Dialogue: Marked=0,0:00:"+from+".00,0:00:"+to+".00,style2,NTP,0000,0000,0240,,{\\b1}Election Results\n"
             thirdTiming+="Dialogue: Marked=0,0:00:"+(from+2)+".00,0:00:"+to+".00,style1,NTP,0000,0000,0180,,1. "+firstCandidate.candidateName+" ("+firstCandidate.partySign+") \\N{\\b1} "+firstCandidate.totalVotesPolled+" Votes\n"
@@ -109,7 +117,7 @@ class CreateVideoService {
             thirdTiming+="Dialogue: Marked=0,0:00:"+(from+6)+".00,0:00:"+to+".00,style1,NTP,0000,0000,0100,,3. "+thirdCandidate.candidateName+" ("+thirdCandidate.partySign+") \\N{\\b1} "+thirdCandidate.totalVotesPolled+" Votes\n\n\n"
 
 //            println thirdTiming
-
+            thirdTiming+="Dialogue: Marked=0,0:00:04.00,0:00:$to.00,style3,NTP,0000,0000,0003,,{\\c&H2728FD&} $constituencyName Constituency \\N{\\c&HFFFFFF&} ($stateName)\n"
             from=to
             to+=5
             String fourthTiming=new String()

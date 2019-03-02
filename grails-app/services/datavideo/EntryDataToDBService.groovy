@@ -36,7 +36,7 @@ class EntryDataToDBService {
         int j = 4
         int i = 4
         boolean flag = true
-        while (flag) {
+        while (i<6  ) {
 
 
             String state = capitalize(String.valueOf(sh1.getRow(i).getCell(1)).toLowerCase());
