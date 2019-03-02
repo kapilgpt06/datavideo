@@ -98,7 +98,6 @@ class CreateVideoService {
             println "contain NOTA "+candidateList.candidateName.contains("None Of The Above")
             secondTiming+="Dialogue: Marked=0,0:00:10.00,0:00:"+to+".00,new,NTP,0000,0000,0240,,{\\b1}Election Candidates \n\n\n"
             candidateList.each {
-                println it
                 if(it.candidateName.split(" |\\.|\\-").join()!="NoneOfTheAbove"){
                     secondTiming+="Dialogue: Marked=0,0:00:"+from+".00,0:00:"+to+".00,style1,NTP,0000,0000,0"+(220-(20*m))+",,"+m+". "+it.candidateName+"{\\b1} ("+it.partySign+") \n"
                     from+=2
