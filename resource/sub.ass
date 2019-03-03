@@ -1,0 +1,31 @@
+[Script Info]
+; This is a Sub Station Alpha v4 script.
+; For Sub Station Alpha info and downloads,
+; go to http://www.eswat.demon.co.uk/
+Title: Neon Genesis Evangelion - Episode 26
+Original Script: RoRo
+Collisions: Normal
+PlayDepth: 0
+Timer: 100,0000
+
+[Empty]
+
+[V4 Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV,  Encoding
+Style: DefaultVCD,Aleo-Regular,20,&H00060607,&H000000FF,&H00000000,&H00000000,0,0,0,0,0,2,100,100,100,0
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV,  Encoding
+Style: new,Aleo-Regular,18,&H00060607,&H000000FF,&H00000000,&H00000000,0,0,0,0,0,2,0,0,220,0
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV,  Encoding
+Style: style1,Aleo-Regular,14,&H00060607,&H000000FF,&H00000000,&H00000000,0,0,0,0,0,2,0,0,0,0
+
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV,  Encoding
+Style: style2,Aleo-Regular,20,&H00060607,&H000000FF,&H00000000,&H00000000,0,0,0,0,0,2,0,0,220,0
+
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV,  Encoding
+Style: style3,Aleo-Regular,12,&H00060607,&H000000FF,&H00000000,&H00000000,0,0,0,0,0,2,0,0,0,0
+
+
+[Events]
+Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+

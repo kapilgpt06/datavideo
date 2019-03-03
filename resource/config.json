@@ -1,0 +1,35 @@
+{
+  "output": "../UCKl5pBcN9bl0cyrzaHHYtKA/election_2014_loksabha_Peddapalle-main.mp4",
+  "options": {
+    "fps": 25,
+    "loop": 37 ,
+    "transition": true,
+    "transitionDuration": 1,
+    "videoBitrate": 1024,
+    "videoCodec": "libx264",
+    "size": "1280x?",
+    "audioBitrate": "128k",
+    "audioChannels": 2,
+    "format": "mp4",
+    "subtitleStyles": {
+      "Fontname": "Verdana",
+      "Fontsize": "26",
+      "PrimaryColour": "11861244",
+      "SecondaryColour": "11861244",
+      "TertiaryColour": "11861244",
+      "BackColour": "-2147483640",
+      "Bold": "2",
+      "Italic": "0",
+      "BorderStyle": "2",
+      "Outline": "2",
+      "Shadow": "3",
+      "Alignment": "1",
+      "MarginL": "0",
+      "MarginR": "0",
+      "MarginV": "0"
+    }
+  },
+  "images": [
+    "image.png"
+  ]
+}

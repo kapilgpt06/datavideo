@@ -1,7 +1,7 @@
 google:
   oauth:
-    clientId: 1023196152723-6shlrh538pnm6n8b4mggd2hnvr37eaf3.apps.googleusercontent.com
-    clientSecret: _0-p-ZMCe561LJ6Am9jZxAbU
+    clientId: *
+    clientSecret: *
 
 #please ensure resource folder is should be in this directory
 #resource file contain image,audio,conf.json,sub.ass file

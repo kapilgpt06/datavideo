@@ -1,0 +1,61 @@
+[Script Info]
+; This is a Sub Station Alpha v4 script.
+; For Sub Station Alpha info and downloads,
+; go to http://www.eswat.demon.co.uk/
+Title: Neon Genesis Evangelion - Episode 26
+Original Script: RoRo
+Collisions: Normal
+PlayDepth: 0
+Timer: 100,0000
+
+[Empty]
+
+[V4 Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV,  Encoding
+Style: DefaultVCD,Aleo-Regular,20,&H00060607,&H000000FF,&H00000000,&H00000000,0,0,0,0,0,2,100,100,100,0
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV,  Encoding
+Style: new,Aleo-Regular,18,&H00060607,&H000000FF,&H00000000,&H00000000,0,0,0,0,0,2,0,0,220,0
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV,  Encoding
+Style: style1,Aleo-Regular,14,&H00060607,&H000000FF,&H00000000,&H00000000,0,0,0,0,0,2,0,0,0,0
+
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV,  Encoding
+Style: style2,Aleo-Regular,20,&H00060607,&H000000FF,&H00000000,&H00000000,0,0,0,0,0,2,0,0,220,0
+
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV,  Encoding
+Style: style3,Aleo-Regular,12,&H00060607,&H000000FF,&H00000000,&H00000000,0,0,0,0,0,2,0,0,0,0
+
+
+[Events]
+Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+
+Dialogue: Marked=0,0:00:01.00,0:00:04.00,DefaultVCD,NTP,0000,0000,0000,,{\b1\c&H1F883D&}2014 \N{\c&H3E98F3&} LOK  SABHA \N{\c&H1F883D&} ELECTION RESULTS \N\N\N\N\N{\b0\c&H1011EC&} Peddapalle Constituency \N{\c&H070709&} (Andhra Pradesh)
+Dialogue: Marked=0,0:00:04.00,0:00:10.00,new,NTP,0000,0200,0200,,No of Electors \N{\b1\c&H1011EC&} 1,425,355
+Dialogue: Marked=0,0:00:06.00,0:00:10.00,new,NTP,0200,0000,0200,,No of Voters \N{\b1\c&H1011EC&}1,025,194
+Dialogue: Marked=0,0:00:08.00,0:00:10.00,new,NTP,0000,0000,0120,,Poll (%) \N{\b1\c&H1011EC&}71%
+
+
+Dialogue: Marked=0,0:00:10.00,0:00:24.00,new,NTP,0000,0000,0240,,{\b1}Election Candidates 
+
+
+Dialogue: Marked=0,0:00:10.00,0:00:24.00,style1,NTP,0000,0000,0200,,1. Balka Suman{\b1} (TRS) 
+Dialogue: Marked=0,0:00:12.00,0:00:24.00,style1,NTP,0000,0000,0180,,2. G. Vivekanand{\b1} (INC) 
+Dialogue: Marked=0,0:00:14.00,0:00:24.00,style1,NTP,0000,0000,0160,,3. Dr Janapati Sarat Babu{\b1} (TDP) 
+Dialogue: Marked=0,0:00:16.00,0:00:24.00,style1,NTP,0000,0000,0140,,4. Velthuru Mallaiah{\b1} (RP(K)) 
+Dialogue: Marked=0,0:00:18.00,0:00:24.00,style1,NTP,0000,0000,0120,,5. Tagaram Shankar Lal{\b1} (BSP) 
+Dialogue: Marked=0,0:00:20.00,0:00:24.00,style1,NTP,0000,0000,0100,,6. Kalvala Shankar{\b1} (PPOI) 
+Dialogue: Marked=0,0:00:22.00,0:00:24.00,style1,NTP,0000,0000,080,,7. Jinna Ramadevi{\b1} (IND) 
+Dialogue: Marked=0,0:00:24.00,0:00:32.00,style2,NTP,0000,0000,0240,,{\b1}Election Results
+Dialogue: Marked=0,0:00:26.00,0:00:32.00,style1,NTP,0000,0000,0180,,1. Balka Suman (TRS) \N{\b1} 565,496 Votes
+Dialogue: Marked=0,0:00:28.00,0:00:32.00,style1,NTP,0000,0000,0140,,2. G. Vivekanand (INC) \N{\b1} 274,338 Votes
+Dialogue: Marked=0,0:00:30.00,0:00:32.00,style1,NTP,0000,0000,0100,,3. Dr Janapati Sarat Babu (TDP) \N{\b1} 63,334 Votes
+
+
+Dialogue: Marked=0,0:00:04.00,0:00:32.00,style3,NTP,0000,0000,0003,,{\c&H2728FD&} Peddapalle Constituency \N{\c&HFFFFFF&} (Andhra Pradesh)
+Dialogue: Marked=0,0:00:32.00,0:00:37.00,new,NTP,0000,0000,0150,,Balka Suman (TRS) \N{\b1}565,496 Votes
+Dialogue: Marked=0,0:00:32.00,0:00:37.00,style1,NTP,0000,0000,0100,,{\b1\c&H1011EC&} Peddapalle Constituency \N\N{\b0\c&H070709&} (Andhra Pradesh)
+Dialogue: Marked=0,0:00:32.00,0:00:32.50,style2,NTP,0000,0000,0220,,{\b1}Winner
+Dialogue: Marked=0,0:00:33.00,0:00:33.50,style2,NTP,0000,0000,0220,,{\b1}Winner
+Dialogue: Marked=0,0:00:34.00,0:00:34.50,style2,NTP,0000,0000,0220,,{\b1}Winner
+Dialogue: Marked=0,0:00:35.00,0:00:35.50,style2,NTP,0000,0000,0220,,{\b1}Winner
+Dialogue: Marked=0,0:00:36.00,0:00:36.50,style2,NTP,0000,0000,0220,,{\b1}Winner

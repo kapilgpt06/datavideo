@@ -133,8 +133,8 @@ grails :
     mail :
         host : smtp.gmail.com
         port : 25
-        username : dtwo2v@gmail.com
-        password : dtwo2v.com
+        username : *
+        password : *
         props :
             mail.smtp.auth: true
             mail.smtp.starttls.enable: true

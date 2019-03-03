@@ -1,0 +1,1 @@
+ffmpeg -i sting.mp4 -i ../UCKl5pBcN9bl0cyrzaHHYtKA/election_2014_loksabha_Peddapalle-main.mp4 -filter_complex '[0:v] [1:v] concat=n=2:v=1 [v]' -map '[v]' ../UCKl5pBcN9bl0cyrzaHHYtKA/election_2014_loksabha_Peddapalle.mp4
