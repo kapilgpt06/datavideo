@@ -42,9 +42,11 @@ class CreateVideoService {
         bufferedWriter.close();
     }
 
-    void madeVideo(String makeVideoFilePath,String command) {
+    void madeVideo() {
+        String command=grailsApplication.config.videoshow.command
+        String videoPath=grailsApplication.config.video.path+"/resource"
         Runtime rt = Runtime.getRuntime();
-        File dir = new File(makeVideoFilePath)
+        File dir = new File(videoPath)
 
         try {
             Process process = rt.exec(command, null, dir);
@@ -61,6 +63,47 @@ class CreateVideoService {
         } catch (Exception e) {
             System.err.println(e);
         }
+    }
+    void mergeVideo(String channelId,String videoName){
+        String path=grailsApplication.config.video.path
+        String mergeCommand=grailsApplication.config.videoMerge.command
+        mergeCommand=mergeCommand.replace("dvMainVideo","../"+channelId+"/"+videoName+"-main.mp4")
+        mergeCommand=mergeCommand.replace("dvOutput","../"+channelId+"/"+videoName+".mp4")
+
+        File directory=new File(path+"/resource/")
+        File file=new File(directory,"command.sh")
+        FileWriter fileWriter=new FileWriter(file)
+        fileWriter.write(mergeCommand)
+        fileWriter.flush()
+        fileWriter.close()
+
+        Runtime runtime=Runtime.getRuntime();
+        try{
+            println "mergevideo"
+            Process process=runtime.exec("./command.sh",null,directory);
+            process.waitFor();
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+
+                System.out.println(line + "\n");
+
+
+            }
+
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
+    def deleteVideo(String channelId,String videoName){
+        String path=grailsApplication.config.video.path
+        println "delete"
+        File file1=new File(path+"/"+channelId+"/"+videoName+"-main.mp4")
+        if(file1.exists())
+            file1.delete()
     }
 
     void convert(VideoDataEntry videoDataEntry) throws Exception {
@@ -134,12 +177,11 @@ class CreateVideoService {
 
             saveSubtitle();
             String channelId=videoDataEntry.channel.channelId
-            setConfigFile(String.valueOf(to), "../"+channelId+"/"+videoDataEntry.videoName);
+            setConfigFile(String.valueOf(to), "../"+channelId+"/"+videoDataEntry.videoName+"-main");
 
-            String command=grailsApplication.config.videoshow.command
-            String videoPath=grailsApplication.config.video.path
-            madeVideo(videoPath+"/resource",command);
-
+            madeVideo()
+            mergeVideo(channelId,videoDataEntry.videoName)
+            deleteVideo(channelId,videoDataEntry.videoName)
 
             Calendar calendar=Calendar.getInstance()
             Date date=calendar.getTime()

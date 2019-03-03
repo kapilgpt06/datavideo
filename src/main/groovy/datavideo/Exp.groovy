@@ -7,8 +7,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 class Exp {
 static void main(String[] args)throws Exception {
 
-    String str="None Of The &.Above"
-    println str.split(" |\\.|\\&|\\-").join()
+   File file=new File("/home/kapil/opt/d2v/UCKl5pBcN9bl0cyrzaHHYtKA/election_2014_loksabha_Adilabad-main.mp4")
+    file.delete()
 }
 
 }

@@ -24,3 +24,10 @@ youtube:
   video:
     mode: private
 
+videoMerge:
+    command: ffmpeg -i sting.mp4 -i dvMainVideo -filter_complex '[0:v] [1:v] concat=n=2:v=1 [v]' -map '[v]' dvOutput
+# use this when you merge audio in main video otherwise it gives error
+#  command: ffmpeg -i Sting.mp4 -i dvMainVideo  -filter_complex '[0:v:0][0:a:0][1:v:0][1:a:0] concat=n=2:v=1:a=1[outv][outa]' -map '[outv]' -map '[outa]' -strict -2 dvOutput
+
+exception:
+  email: kapil@techcrumb.com

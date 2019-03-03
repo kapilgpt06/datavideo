@@ -129,8 +129,9 @@ class UploadVideoService {
     }
 
     def sendMail(String subjectMsg,String message) {
+        String email=grailsApplication.config.exception.email
         sendMail {
-            to "kapil@techcrumb.com"
+            to email
             subject subjectMsg
             body message
 

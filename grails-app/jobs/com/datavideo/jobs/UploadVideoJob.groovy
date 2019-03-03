@@ -19,8 +19,8 @@ class UploadVideoJob {
 
             if(VideoDataEntry.findByVideoIdAndVideoPathNotEqual("NULL","NULL")){
                 println("upload video job detect")
-//                VideoDataEntry videoDataEntry=VideoDataEntry.findByVideoIdAndVideoPathNotEqual("NULL","NULL")
-//                uploadVideoService.uploadVideo(videoDataEntry)
+                VideoDataEntry videoDataEntry=VideoDataEntry.findByVideoIdAndVideoPathNotEqual("NULL","NULL")
+                uploadVideoService.uploadVideo(videoDataEntry)
 
             }
 
